@@ -5,7 +5,6 @@ from app.components.dashboard.metric_card import metric_card
 from app.components.dashboard.enrollment_chart import enrollment_chart
 from app.components.dashboard.course_chart import course_chart
 from app.components.dashboard.activity_feed import activity_feed
-from app.components.dashboard.quick_actions import quick_actions
 
 
 def dashboard() -> rx.Component:
@@ -18,7 +17,6 @@ def dashboard() -> rx.Component:
             ),
             class_name="mb-6",
         ),
-        rx.el.div(quick_actions(), class_name="mb-6"),
         rx.el.div(
             metric_card("users", "Total Students", DashboardState.total_students),
             metric_card("book-open", "Active Courses", DashboardState.active_courses),

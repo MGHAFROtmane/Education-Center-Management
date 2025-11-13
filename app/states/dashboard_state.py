@@ -62,7 +62,3 @@ class DashboardState(rx.State):
             "timestamp": "1d ago",
         },
     ]
-
-    @rx.event
-    def quick_action(self, action: str):
-        return rx.toast.info(f"Action: {action}", duration=3000)
