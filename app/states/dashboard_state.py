@@ -65,4 +65,4 @@ class DashboardState(rx.State):
 
     @rx.event
     def quick_action(self, action: str):
-        return rx.toast(f"Action: {action}", duration=3000)
+        return rx.toast.info(f"Action: {action}", duration=3000)

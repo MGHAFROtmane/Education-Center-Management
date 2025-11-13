@@ -68,6 +68,7 @@ def _table_row(student: Student) -> rx.Component:
                 ),
                 rx.el.button(
                     rx.icon("pencil", class_name="h-4 w-4"),
+                    on_click=lambda: StudentState.open_edit_modal(student),
                     class_name="p-1 text-gray-400 hover:text-green-600 hover:bg-gray-100 rounded-md transition-colors",
                 ),
                 rx.el.button(

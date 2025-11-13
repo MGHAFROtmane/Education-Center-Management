@@ -126,6 +126,18 @@ class StudentState(rx.State):
     sort_order: Literal["asc", "desc"] = "asc"
     is_delete_dialog_open: bool = False
     student_to_delete: Optional[Student] = None
+    is_form_modal_open: bool = False
+    form_mode: Literal["add", "edit"] = "add"
+    form_student: Student = {
+        "id": 0,
+        "name": "",
+        "email": "",
+        "phone": "",
+        "status": "Active",
+        "enrolled_courses": 0,
+        "dob": "",
+        "address": "",
+    }
 
     @rx.var
     def filtered_students(self) -> list[Student]:
@@ -180,3 +192,54 @@ class StudentState(rx.State):
     @rx.var
     def student_to_delete_name(self) -> str:
         return self.student_to_delete["name"] if self.student_to_delete else ""
+
+    @rx.event
+    def open_add_modal(self):
+        self.form_mode = "add"
+        self.form_student = {
+            "id": 0,
+            "name": "",
+            "email": "",
+            "phone": "",
+            "status": "Active",
+            "enrolled_courses": 0,
+            "dob": "",
+            "address": "",
+        }
+        self.is_form_modal_open = True
+
+    @rx.event
+    def open_edit_modal(self, student: Student):
+        self.form_mode = "edit"
+        self.form_student = student
+        self.is_form_modal_open = True
+
+    @rx.event
+    def close_form_modal(self):
+        self.is_form_modal_open = False
+
+    def _set_form_student_field(self, key: str, value):
+        self.form_student[key] = value
+
+    @rx.event
+    def handle_form_change(self, field: str, value: str):
+        self._set_form_student_field(field, value)
+
+    @rx.event
+    def save_student(self):
+        if not self.form_student["name"] or not self.form_student["email"]:
+            return rx.toast.error("Name and email are required.")
+        if self.form_mode == "add":
+            new_student = self.form_student.copy()
+            new_student["id"] = (
+                max((s["id"] for s in self.students)) + 1 if self.students else 1
+            )
+            self.students.append(new_student)
+            yield rx.toast.success(f"Student '{new_student['name']}' added.")
+        else:
+            self.students = [
+                self.form_student if s["id"] == self.form_student["id"] else s
+                for s in self.students
+            ]
+            yield rx.toast.success(f"Student '{self.form_student['name']}' updated.")
+        self.close_form_modal()

@@ -2,6 +2,7 @@ import reflex as rx
 from app.components.layout import main_layout
 from app.states.student_state import StudentState
 from app.components.students.student_list import student_table
+from app.components.students.student_form import student_form
 
 
 def students_page() -> rx.Component:
@@ -17,6 +18,7 @@ def students_page() -> rx.Component:
                 rx.el.button(
                     rx.icon("plus", class_name="mr-2 h-4 w-4"),
                     "Add Student",
+                    on_click=StudentState.open_add_modal,
                     class_name="flex items-center bg-orange-500 text-white px-4 py-2 rounded-lg font-medium hover:bg-orange-600 transition-colors",
                 ),
                 class_name="flex items-center justify-between mb-6",
@@ -44,6 +46,7 @@ def students_page() -> rx.Component:
                 class_name="flex items-center gap-4 mb-6",
             ),
             student_table(),
+            student_form(),
             class_name="p-6 sm:p-8 w-full",
         )
     )
